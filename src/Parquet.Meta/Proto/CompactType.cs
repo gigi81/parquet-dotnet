@@ -1,6 +1,6 @@
 ﻿namespace Parquet.Meta.Proto;
 
-enum CompactType : byte {
+public enum CompactType : byte {
     Stop = 0x00,
     BooleanTrue = 0x01,
     BooleanFalse = 0x02,

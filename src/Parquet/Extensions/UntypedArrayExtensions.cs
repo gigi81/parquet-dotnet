@@ -2,77 +2,77 @@
 // https://learn.microsoft.com/en-us/visualstudio/modeling/text-template-control-blocks?view=vs-2022
 // Because of this, performance is truly great!
 // Hint: prefer Rider to edit .tt as it support syntax highlighting
-namespace Parquet.Extensions {
+namespace Parquet.Extensions;
 
-    using System;
-    using System.Numerics;
-    using Parquet.File.Values.Primitives;
+using System;
+using System.Numerics;
+using Parquet.File.Values.Primitives;
 
-    static class UntypedArrayExtensions {
+static class UntypedArrayExtensions {
 
-        #region [ Null Counting ]
+    #region [ Null Counting ]
 
-        public static int CalculateNullCountFast(this Array array, int offset, int count) {
-            Type? t = array.GetType().GetElementType();
-            if(t != null && !t.IsNullable()) return 0;
+    public static int CalculateNullCountFast(this Array array, int offset, int count) {
+        Type? t = array.GetType().GetElementType();
+        if(t != null && !t.IsNullable()) return 0;
 
-            if(t == typeof(bool?)) {
-                return CalculateNullCount((bool?[])array, offset, count);
-            }
-            if(t == typeof(byte?)) {
-                return CalculateNullCount((byte?[])array, offset, count);
-            }
-            if(t == typeof(sbyte?)) {
-                return CalculateNullCount((sbyte?[])array, offset, count);
-            }
-            if(t == typeof(short?)) {
-                return CalculateNullCount((short?[])array, offset, count);
-            }
-            if(t == typeof(ushort?)) {
-                return CalculateNullCount((ushort?[])array, offset, count);
-            }
-            if(t == typeof(int?)) {
-                return CalculateNullCount((int?[])array, offset, count);
-            }
-            if(t == typeof(uint?)) {
-                return CalculateNullCount((uint?[])array, offset, count);
-            }
-            if(t == typeof(long?)) {
-                return CalculateNullCount((long?[])array, offset, count);
-            }
-            if(t == typeof(ulong?)) {
-                return CalculateNullCount((ulong?[])array, offset, count);
-            }
-            if(t == typeof(BigInteger?)) {
-                return CalculateNullCount((BigInteger?[])array, offset, count);
-            }
-            if(t == typeof(float?)) {
-                return CalculateNullCount((float?[])array, offset, count);
-            }
-            if(t == typeof(double?)) {
-                return CalculateNullCount((double?[])array, offset, count);
-            }
-            if(t == typeof(decimal?)) {
-                return CalculateNullCount((decimal?[])array, offset, count);
-            }
-            if(t == typeof(DateTime?)) {
-                return CalculateNullCount((DateTime?[])array, offset, count);
-            }
-            if(t == typeof(TimeSpan?)) {
-                return CalculateNullCount((TimeSpan?[])array, offset, count);
-            }
-            if(t == typeof(Interval?)) {
-                return CalculateNullCount((Interval?[])array, offset, count);
-            }
-            if(t == typeof(string)) {
-                return CalculateNullCount((string[])array, offset, count);
-            }
-            if(t == typeof(byte[])) {
-                return CalculateNullCount((byte[][])array, offset, count);
-            }
-            if(t == typeof(Guid?)) {
-                return CalculateNullCount((Guid?[])array, offset, count);
-            }
+        if(t == typeof(bool?)) {
+            return CalculateNullCount((bool?[])array, offset, count);
+        }
+        if(t == typeof(byte?)) {
+            return CalculateNullCount((byte?[])array, offset, count);
+        }
+        if(t == typeof(sbyte?)) {
+            return CalculateNullCount((sbyte?[])array, offset, count);
+        }
+        if(t == typeof(short?)) {
+            return CalculateNullCount((short?[])array, offset, count);
+        }
+        if(t == typeof(ushort?)) {
+            return CalculateNullCount((ushort?[])array, offset, count);
+        }
+        if(t == typeof(int?)) {
+            return CalculateNullCount((int?[])array, offset, count);
+        }
+        if(t == typeof(uint?)) {
+            return CalculateNullCount((uint?[])array, offset, count);
+        }
+        if(t == typeof(long?)) {
+            return CalculateNullCount((long?[])array, offset, count);
+        }
+        if(t == typeof(ulong?)) {
+            return CalculateNullCount((ulong?[])array, offset, count);
+        }
+        if(t == typeof(BigInteger?)) {
+            return CalculateNullCount((BigInteger?[])array, offset, count);
+        }
+        if(t == typeof(float?)) {
+            return CalculateNullCount((float?[])array, offset, count);
+        }
+        if(t == typeof(double?)) {
+            return CalculateNullCount((double?[])array, offset, count);
+        }
+        if(t == typeof(decimal?)) {
+            return CalculateNullCount((decimal?[])array, offset, count);
+        }
+        if(t == typeof(DateTime?)) {
+            return CalculateNullCount((DateTime?[])array, offset, count);
+        }
+        if(t == typeof(TimeSpan?)) {
+            return CalculateNullCount((TimeSpan?[])array, offset, count);
+        }
+        if(t == typeof(Interval?)) {
+            return CalculateNullCount((Interval?[])array, offset, count);
+        }
+        if(t == typeof(string)) {
+            return CalculateNullCount((string[])array, offset, count);
+        }
+        if(t == typeof(byte[])) {
+            return CalculateNullCount((byte[][])array, offset, count);
+        }
+        if(t == typeof(Guid?)) {
+            return CalculateNullCount((Guid?[])array, offset, count);
+        }
 #if NET6_0_OR_GREATER
             if(t == typeof(DateOnly?)) {
                 return CalculateNullCount((DateOnly?[])array, offset, count);
@@ -81,180 +81,180 @@ namespace Parquet.Extensions {
                 return CalculateNullCount((TimeOnly?[])array, offset, count);
             }
 #endif            
-            throw new NotSupportedException($"cannot count nulls in type {t}");
-        }
+        throw new NotSupportedException($"cannot count nulls in type {t}");
+    }
 
-        private static int CalculateNullCount(bool?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+    private static int CalculateNullCount(bool?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(byte?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(byte?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(sbyte?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(sbyte?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(short?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(short?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(ushort?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(ushort?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(int?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(int?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(uint?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(uint?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(long?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(long?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(ulong?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(ulong?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(BigInteger?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(BigInteger?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(float?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(float?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(double?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(double?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(decimal?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(decimal?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(DateTime?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(DateTime?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(TimeSpan?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(TimeSpan?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(Interval?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(Interval?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(string[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(string[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(byte[][] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(byte[][] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
-        private static int CalculateNullCount(Guid?[] array, int offset, int count) {
-            int r = 0;
-            for(int i = offset; i < count; i++) {
-                if(array[i] == null) {
-                    r++;
-                }
+        return r;
+    }
+    private static int CalculateNullCount(Guid?[] array, int offset, int count) {
+        int r = 0;
+        for(int i = offset; i < count; i++) {
+            if(array[i] == null) {
+                r++;
             }
-            return r;
         }
+        return r;
+    }
 #if NET6_0_OR_GREATER
         private static int CalculateNullCount(DateOnly?[] array, int offset, int count) {
             int r = 0;
@@ -280,154 +280,154 @@ namespace Parquet.Extensions {
     #region [ Null Packing ]
 
     public static void PackNullsFast(this Array array,
-            int offset, int count,
-            Array packedData,
-            Span<int> dest,
-            int fillerValue) {
+        int offset, int count,
+        Array packedData,
+        Span<int> dest,
+        int fillerValue) {
 
-            Type? t = array.GetType().GetElementType();
-            if(t == null)
-                throw new ArgumentException("cannot detect element type", nameof(array));
+        Type? t = array.GetType().GetElementType();
+        if(t == null)
+            throw new ArgumentException("cannot detect element type", nameof(array));
 
-            if(!t.IsNullable()) {
-                Array.Copy(array, offset, packedData, 0, count);
-                dest.Fill(fillerValue);
-                return;
-            }
+        if(!t.IsNullable()) {
+            Array.Copy(array, offset, packedData, 0, count);
+            dest.Fill(fillerValue);
+            return;
+        }
 
-            if(t == typeof(bool?)) {
-                PackNullsTypeFast((bool?[])array,
-                    offset, count,
-                    (bool[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(byte?)) {
-                PackNullsTypeFast((byte?[])array,
-                    offset, count,
-                    (byte[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(sbyte?)) {
-                PackNullsTypeFast((sbyte?[])array,
-                    offset, count,
-                    (sbyte[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(short?)) {
-                PackNullsTypeFast((short?[])array,
-                    offset, count,
-                    (short[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(ushort?)) {
-                PackNullsTypeFast((ushort?[])array,
-                    offset, count,
-                    (ushort[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(int?)) {
-                PackNullsTypeFast((int?[])array,
-                    offset, count,
-                    (int[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(uint?)) {
-                PackNullsTypeFast((uint?[])array,
-                    offset, count,
-                    (uint[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(long?)) {
-                PackNullsTypeFast((long?[])array,
-                    offset, count,
-                    (long[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(ulong?)) {
-                PackNullsTypeFast((ulong?[])array,
-                    offset, count,
-                    (ulong[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(BigInteger?)) {
-                PackNullsTypeFast((BigInteger?[])array,
-                    offset, count,
-                    (BigInteger[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(float?)) {
-                PackNullsTypeFast((float?[])array,
-                    offset, count,
-                    (float[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(double?)) {
-                PackNullsTypeFast((double?[])array,
-                    offset, count,
-                    (double[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(decimal?)) {
-                PackNullsTypeFast((decimal?[])array,
-                    offset, count,
-                    (decimal[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(DateTime?)) {
-                PackNullsTypeFast((DateTime?[])array,
-                    offset, count,
-                    (DateTime[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(TimeSpan?)) {
-                PackNullsTypeFast((TimeSpan?[])array,
-                    offset, count,
-                    (TimeSpan[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(Interval?)) {
-                PackNullsTypeFast((Interval?[])array,
-                    offset, count,
-                    (Interval[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(string)) {
-                PackNullsTypeFast((string[])array,
-                    offset, count,
-                    (string[])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(byte[])) {
-                PackNullsTypeFast((byte[][])array,
-                    offset, count,
-                    (byte[][])packedData,
-                    dest, fillerValue);
-                return;
-            }
-            if(t == typeof(Guid?)) {
-                PackNullsTypeFast((Guid?[])array,
-                    offset, count,
-                    (Guid[])packedData,
-                    dest, fillerValue);
-                return;
-            }
+        if(t == typeof(bool?)) {
+            PackNullsTypeFast((bool?[])array,
+                offset, count,
+                (bool[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(byte?)) {
+            PackNullsTypeFast((byte?[])array,
+                offset, count,
+                (byte[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(sbyte?)) {
+            PackNullsTypeFast((sbyte?[])array,
+                offset, count,
+                (sbyte[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(short?)) {
+            PackNullsTypeFast((short?[])array,
+                offset, count,
+                (short[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(ushort?)) {
+            PackNullsTypeFast((ushort?[])array,
+                offset, count,
+                (ushort[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(int?)) {
+            PackNullsTypeFast((int?[])array,
+                offset, count,
+                (int[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(uint?)) {
+            PackNullsTypeFast((uint?[])array,
+                offset, count,
+                (uint[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(long?)) {
+            PackNullsTypeFast((long?[])array,
+                offset, count,
+                (long[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(ulong?)) {
+            PackNullsTypeFast((ulong?[])array,
+                offset, count,
+                (ulong[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(BigInteger?)) {
+            PackNullsTypeFast((BigInteger?[])array,
+                offset, count,
+                (BigInteger[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(float?)) {
+            PackNullsTypeFast((float?[])array,
+                offset, count,
+                (float[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(double?)) {
+            PackNullsTypeFast((double?[])array,
+                offset, count,
+                (double[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(decimal?)) {
+            PackNullsTypeFast((decimal?[])array,
+                offset, count,
+                (decimal[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(DateTime?)) {
+            PackNullsTypeFast((DateTime?[])array,
+                offset, count,
+                (DateTime[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(TimeSpan?)) {
+            PackNullsTypeFast((TimeSpan?[])array,
+                offset, count,
+                (TimeSpan[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(Interval?)) {
+            PackNullsTypeFast((Interval?[])array,
+                offset, count,
+                (Interval[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(string)) {
+            PackNullsTypeFast((string[])array,
+                offset, count,
+                (string[])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(byte[])) {
+            PackNullsTypeFast((byte[][])array,
+                offset, count,
+                (byte[][])packedData,
+                dest, fillerValue);
+            return;
+        }
+        if(t == typeof(Guid?)) {
+            PackNullsTypeFast((Guid?[])array,
+                offset, count,
+                (Guid[])packedData,
+                dest, fillerValue);
+            return;
+        }
  
 #if NET6_0_OR_GREATER
             if(t == typeof(DateOnly?)) {
@@ -445,369 +445,369 @@ namespace Parquet.Extensions {
                 return;
             }
 #endif
-            throw new NotSupportedException($"cannot pack type {t}");
-        }
+        throw new NotSupportedException($"cannot pack type {t}");
+    }
 
-        private static void PackNullsTypeFast(bool?[] array,
-            int offset, int count,
-            bool[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(bool?[] array,
+        int offset, int count,
+        bool[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                bool? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            bool? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (bool)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (bool)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(byte?[] array,
-            int offset, int count,
-            byte[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(byte?[] array,
+        int offset, int count,
+        byte[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                byte? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            byte? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (byte)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (byte)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(sbyte?[] array,
-            int offset, int count,
-            sbyte[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(sbyte?[] array,
+        int offset, int count,
+        sbyte[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                sbyte? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            sbyte? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (sbyte)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (sbyte)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(short?[] array,
-            int offset, int count,
-            short[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(short?[] array,
+        int offset, int count,
+        short[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                short? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            short? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (short)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (short)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(ushort?[] array,
-            int offset, int count,
-            ushort[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(ushort?[] array,
+        int offset, int count,
+        ushort[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                ushort? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            ushort? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (ushort)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (ushort)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(int?[] array,
-            int offset, int count,
-            int[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(int?[] array,
+        int offset, int count,
+        int[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                int? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            int? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (int)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (int)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(uint?[] array,
-            int offset, int count,
-            uint[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(uint?[] array,
+        int offset, int count,
+        uint[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                uint? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            uint? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (uint)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (uint)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(long?[] array,
-            int offset, int count,
-            long[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(long?[] array,
+        int offset, int count,
+        long[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                long? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            long? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (long)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (long)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(ulong?[] array,
-            int offset, int count,
-            ulong[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(ulong?[] array,
+        int offset, int count,
+        ulong[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                ulong? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            ulong? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (ulong)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (ulong)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(BigInteger?[] array,
-            int offset, int count,
-            BigInteger[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(BigInteger?[] array,
+        int offset, int count,
+        BigInteger[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                BigInteger? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            BigInteger? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (BigInteger)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (BigInteger)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(float?[] array,
-            int offset, int count,
-            float[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(float?[] array,
+        int offset, int count,
+        float[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                float? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            float? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (float)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (float)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(double?[] array,
-            int offset, int count,
-            double[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(double?[] array,
+        int offset, int count,
+        double[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                double? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            double? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (double)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (double)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(decimal?[] array,
-            int offset, int count,
-            decimal[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(decimal?[] array,
+        int offset, int count,
+        decimal[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                decimal? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            decimal? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (decimal)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (decimal)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(DateTime?[] array,
-            int offset, int count,
-            DateTime[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(DateTime?[] array,
+        int offset, int count,
+        DateTime[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                DateTime? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            DateTime? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (DateTime)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (DateTime)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(TimeSpan?[] array,
-            int offset, int count,
-            TimeSpan[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(TimeSpan?[] array,
+        int offset, int count,
+        TimeSpan[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                TimeSpan? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            TimeSpan? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (TimeSpan)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (TimeSpan)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(Interval?[] array,
-            int offset, int count,
-            Interval[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(Interval?[] array,
+        int offset, int count,
+        Interval[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                Interval? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            Interval? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (Interval)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (Interval)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(string[] array,
-            int offset, int count,
-            string[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(string[] array,
+        int offset, int count,
+        string[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                string value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            string value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (string)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (string)value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(byte[][] array,
-            int offset, int count,
-            byte[][] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(byte[][] array,
+        int offset, int count,
+        byte[][] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                byte[] value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            byte[] value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (byte[])value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (byte[])value;
             }
         }
+    }
 
-        private static void PackNullsTypeFast(Guid?[] array,
-            int offset, int count,
-            Guid[] packedArray,
-            Span<int> dest,
-            int fillerValue) {
+    private static void PackNullsTypeFast(Guid?[] array,
+        int offset, int count,
+        Guid[] packedArray,
+        Span<int> dest,
+        int fillerValue) {
 
-            for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
-                Guid? value = array[i];
+        for(int i = offset, y = 0, ir = 0; i < (offset + count); i++, y++) {
+            Guid? value = array[i];
 
-                if(value == null) {
-                    dest[y] = fillerValue - 1;
-                }
-                else {
-                    dest[y] = fillerValue;
-                    packedArray[ir++] = (Guid)value;
-                }
+            if(value == null) {
+                dest[y] = fillerValue - 1;
+            }
+            else {
+                dest[y] = fillerValue;
+                packedArray[ir++] = (Guid)value;
             }
         }
+    }
 
 #if NET6_0_OR_GREATER
         private static void PackNullsTypeFast(DateOnly?[] array,
@@ -1295,8 +1295,8 @@ namespace Parquet.Extensions {
     #region [ Dictionary Explosion ]
 
     public static void ExplodeFast(this Array dictionary,
-            Span<int> indexes,
-            Array result, int resultOffset, int resultCount) {
+        Span<int> indexes,
+        Array result, int resultOffset, int resultCount) {
         Type? t = dictionary.GetType().GetElementType();
         if(t == null)
             throw new ArgumentException("cannot detect element type", nameof(dictionary));
@@ -1709,5 +1709,4 @@ namespace Parquet.Extensions {
 #endif
     #endregion
 
-    }
 }

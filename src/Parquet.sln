@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parquet.Data.Analysis", "Pa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parquet.Underfloor", "Parquet.Underfloor\Parquet.Underfloor.csproj", "{345F71B8-D9AC-42CB-AB95-C7D807691BC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parquet.Meta", "Parquet.Meta\Parquet.Meta.csproj", "{DED1687F-7D15-43D0-938A-47471A210F22}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{345F71B8-D9AC-42CB-AB95-C7D807691BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{345F71B8-D9AC-42CB-AB95-C7D807691BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{345F71B8-D9AC-42CB-AB95-C7D807691BC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DED1687F-7D15-43D0-938A-47471A210F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DED1687F-7D15-43D0-938A-47471A210F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DED1687F-7D15-43D0-938A-47471A210F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DED1687F-7D15-43D0-938A-47471A210F22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,7 @@ using Parquet.Extensions;
 
 namespace Parquet.Meta.Proto;
 
-class ThriftCompactProtocolReader {
+public class ThriftCompactProtocolReader {
     private readonly Stream _inputStream;
     private readonly Stack<short> _lastField = new Stack<short>(15);
     private short _lastFieldId;
