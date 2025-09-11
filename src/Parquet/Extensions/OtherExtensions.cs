@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Parquet.Schema;
 
-namespace Parquet {
-    static class OtherExtensions {
-        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        private const long UnixEpochMilliseconds = 62_135_596_800_000L;
-        private const long UnixEpochMicroseconds = 62_135_596_800_000_000L;
+namespace Parquet;
+
+static class OtherExtensions {
+    private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    private const long UnixEpochMilliseconds = 62_135_596_800_000L;
+    private const long UnixEpochMicroseconds = 62_135_596_800_000_000L;
         
 #if NET7_0_OR_GREATER
         private static long UnixEpochNanoseconds = UnixEpoch.Ticks * TimeSpan.NanosecondsPerTick;
 #endif
 
-        public static DateTimeOffset FromUnixMilliseconds(this long unixMilliseconds) {
-            return UnixEpoch.AddMilliseconds(unixMilliseconds);
-        }
+    public static DateTimeOffset FromUnixMilliseconds(this long unixMilliseconds) {
+        return UnixEpoch.AddMilliseconds(unixMilliseconds);
+    }
 
-        public static DateTime AsUnixMillisecondsInDateTime(this long unixMilliseconds) {
-            return UnixEpoch.AddMilliseconds(unixMilliseconds);
-        }
+    public static DateTime AsUnixMillisecondsInDateTime(this long unixMilliseconds) {
+        return UnixEpoch.AddMilliseconds(unixMilliseconds);
+    }
 
-        public static long ToUnixMilliseconds(this DateTime dto) {
-            long milliseconds = dto.Ticks / TimeSpan.TicksPerMillisecond;
-            return milliseconds - UnixEpochMilliseconds;
-        }
+    public static long ToUnixMilliseconds(this DateTime dto) {
+        long milliseconds = dto.Ticks / TimeSpan.TicksPerMillisecond;
+        return milliseconds - UnixEpochMilliseconds;
+    }
 
 #if NET7_0_OR_GREATER
         public static long ToUnixMicroseconds(this DateTime dto) {
@@ -39,14 +39,14 @@ namespace Parquet {
         }
 #endif
 
-        public static DateTime AsUnixDaysInDateTime(this int unixDays) {
-            return UnixEpoch.AddDays(unixDays);
-        }
+    public static DateTime AsUnixDaysInDateTime(this int unixDays) {
+        return UnixEpoch.AddDays(unixDays);
+    }
 
-        public static int ToUnixDays(this DateTime dto) {
-            TimeSpan diff = dto - UnixEpoch;
-            return (int)diff.TotalDays;
-        }
+    public static int ToUnixDays(this DateTime dto) {
+        TimeSpan diff = dto - UnixEpoch;
+        return (int)diff.TotalDays;
+    }
 
 #if NET6_0_OR_GREATER
         public static int ToUnixDays(this DateOnly dto) {
@@ -55,43 +55,42 @@ namespace Parquet {
         }
 #endif
 
-        public static DateTime ToUtc(this DateTime dto) =>
-            dto.Kind == DateTimeKind.Unspecified
-                ? DateTime.SpecifyKind(dto, DateTimeKind.Utc)
-                : dto.ToUniversalTime();
+    public static DateTime ToUtc(this DateTime dto) =>
+        dto.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(dto, DateTimeKind.Utc)
+            : dto.ToUniversalTime();
 
-        public static string AddPath(this string s, params string[] parts) {
-            var path = new List<string>(parts.Length + 1);
+    public static string AddPath(this string s, params string[] parts) {
+        var path = new List<string>(parts.Length + 1);
 
-            if(s != null)
-                path.Add(s);
-            if(parts != null)
-                path.AddRange(parts.Where(p => p != null));
+        if(s != null)
+            path.Add(s);
+        if(parts != null)
+            path.AddRange(parts.Where(p => p != null));
 
-            return string.Join(ParquetSchema.PathSeparator, path);
-        }
+        return string.Join(ParquetSchema.PathSeparator, path);
+    }
 
-        public static bool EqualTo(this Array left, Array right) {
-            if(left.Length != right.Length)
-                return false;
+    public static bool EqualTo(this Array left, Array right) {
+        if(left.Length != right.Length)
+            return false;
 
-            for(int i = 0; i < left.Length; i++) {
-                object? il = left.GetValue(i);
-                object? ir = right.GetValue(i);
+        for(int i = 0; i < left.Length; i++) {
+            object? il = left.GetValue(i);
+            object? ir = right.GetValue(i);
 
-                if(il == null || ir == null) {
-                    return il == null && ir == null;
-                }
-
-                if(!il.Equals(ir))
-                    return false;
+            if(il == null || ir == null) {
+                return il == null && ir == null;
             }
 
-            return true;
+            if(!il.Equals(ir))
+                return false;
         }
 
-        public static Exception NotImplemented(string reason) {
-            return new NotImplementedException($"{reason} is not yet implemented, and we are fully aware of it. From here you can either raise an issue on GitHub, or implemented it and raise a PR.");
-        }
+        return true;
+    }
+
+    public static Exception NotImplemented(string reason) {
+        return new NotImplementedException($"{reason} is not yet implemented, and we are fully aware of it. From here you can either raise an issue on GitHub, or implemented it and raise a PR.");
     }
 }

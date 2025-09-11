@@ -1,17 +1,17 @@
 ﻿using System;
 using Xunit;
 
-namespace Parquet.Test.Extensions {
-    public class SpanExtensionsTest {
+namespace Parquet.Test.Extensions;
 
-        [Fact]
-        public void StringMinMax() {
-            ReadOnlySpan<string> span = new string[] { "one", "two", "three" }.AsSpan();
+public class SpanExtensionsTest {
+
+    [Fact]
+    public void StringMinMax() {
+        ReadOnlySpan<string> span = new string[] { "one", "two", "three" }.AsSpan();
             
-            span.MinMax(out string? min, out string? max);
+        span.MinMax(out string? min, out string? max);
 
-            Assert.Equal("one", min);
-            Assert.Equal("two", max);
-        }
+        Assert.Equal("one", min);
+        Assert.Equal("two", max);
     }
 }

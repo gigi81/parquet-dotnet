@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 
-namespace Parquet.Test.Serialisation.Paper {
-    #region [ Paper ]
+namespace Parquet.Test.Serialisation.Paper;
 
-    class Name {
+#region [ Paper ]
 
-        public List<Language>? Language { get; set; }
+class Name {
 
-        public string? Url { get; set; }
-    }
+    public List<Language>? Language { get; set; }
 
-    #endregion
+    public string? Url { get; set; }
 }
+
+#endregion

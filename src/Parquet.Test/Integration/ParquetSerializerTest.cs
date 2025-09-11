@@ -8,63 +8,63 @@ using Parquet.Test.Xunit;
 using Xunit;
 using F = System.IO.File;
 
-namespace Parquet.Test.Integration {
-    public class ParquetSerializerTest : IntegrationBase {
-        class IdWithTags {
-            public int Id { get; set; }
+namespace Parquet.Test.Integration;
 
-            public Dictionary<string, string>? Tags { get; set; }
-        }
+public class ParquetSerializerTest : IntegrationBase {
+    class IdWithTags {
+        public int Id { get; set; }
 
-        private async Task<string> WriteToTempFile<T>(IEnumerable<T> data) {
-            string testFileName = Path.GetFullPath($"{nameof(ParquetSerializerTest)}.parquet");
+        public Dictionary<string, string>? Tags { get; set; }
+    }
 
-            if(F.Exists(testFileName))
-                F.Delete(testFileName);
+    private async Task<string> WriteToTempFile<T>(IEnumerable<T> data) {
+        string testFileName = Path.GetFullPath($"{nameof(ParquetSerializerTest)}.parquet");
 
-            await ParquetSerializer.SerializeAsync(data, testFileName);
-            return testFileName;
-        }
+        if(F.Exists(testFileName))
+            F.Delete(testFileName);
+
+        await ParquetSerializer.SerializeAsync(data, testFileName);
+        return testFileName;
+    }
 
 
-        [SkipOnMac]
-        public async Task SimpleMapReadsWithParquetMr() {
-            var data = Enumerable.Range(0, 10).Select(i => new IdWithTags {
-                Id = i,
-                Tags = new Dictionary<string, string> {
-                    ["id"] = i.ToString(),
-                    ["gen"] = DateTime.UtcNow.ToString()
-                }
-            }).ToList();
+    [SkipOnMac]
+    public async Task SimpleMapReadsWithParquetMr() {
+        var data = Enumerable.Range(0, 10).Select(i => new IdWithTags {
+            Id = i,
+            Tags = new Dictionary<string, string> {
+                ["id"] = i.ToString(),
+                ["gen"] = DateTime.UtcNow.ToString()
+            }
+        }).ToList();
 
-            string fileName = await WriteToTempFile(data);
+        string fileName = await WriteToTempFile(data);
 
-            // read with Java
-            string? javaCat = ExecMrCat(fileName);
-            Assert.NotNull(javaCat);
-            Assert.Contains("id", javaCat);
-            Assert.Contains("gen", javaCat);
-        }
+        // read with Java
+        string? javaCat = ExecMrCat(fileName);
+        Assert.NotNull(javaCat);
+        Assert.Contains("id", javaCat);
+        Assert.Contains("gen", javaCat);
+    }
 
-        [SkipOnMac]
-        public async Task SimpleMapReadsWithPyArrow() {
-            var data = Enumerable.Range(0, 10).Select(i => new IdWithTags {
-                Id = i,
-                Tags = new Dictionary<string, string> {
-                    ["id"] = i.ToString(),
-                    ["gen"] = DateTime.UtcNow.ToString()
-                }
-            }).ToList();
+    [SkipOnMac]
+    public async Task SimpleMapReadsWithPyArrow() {
+        var data = Enumerable.Range(0, 10).Select(i => new IdWithTags {
+            Id = i,
+            Tags = new Dictionary<string, string> {
+                ["id"] = i.ToString(),
+                ["gen"] = DateTime.UtcNow.ToString()
+            }
+        }).ToList();
 
-            string fileName = await WriteToTempFile(data);
+        string fileName = await WriteToTempFile(data);
 
-            //F.Copy(fileName, "c:\\tmp\\pyarrow.parquet", true);
+        //F.Copy(fileName, "c:\\tmp\\pyarrow.parquet", true);
 
-            // read with Java
-            string? arrowCat = ExecPyArrowToJson(fileName);
-            Assert.NotNull(arrowCat);
-            Assert.Contains("id", arrowCat);
-            Assert.Contains("gen", arrowCat);
-        }
+        // read with Java
+        string? arrowCat = ExecPyArrowToJson(fileName);
+        Assert.NotNull(arrowCat);
+        Assert.Contains("id", arrowCat);
+        Assert.Contains("gen", arrowCat);
     }
 }

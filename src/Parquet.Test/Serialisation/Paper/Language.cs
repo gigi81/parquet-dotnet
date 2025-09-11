@@ -1,11 +1,11 @@
-﻿namespace Parquet.Test.Serialisation.Paper {
-    #region [ Paper ]
+﻿namespace Parquet.Test.Serialisation.Paper;
 
-    class Language {
-        public string? Code { get; set; }
+#region [ Paper ]
 
-        public string? Country { get; set; }
-    }
+class Language {
+    public string? Code { get; set; }
 
-    #endregion
+    public string? Country { get; set; }
 }
+
+#endregion

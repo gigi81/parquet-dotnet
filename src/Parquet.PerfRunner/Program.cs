@@ -1,7 +1,6 @@
 ﻿// for performance tests only
 
 using BenchmarkDotNet.Running;
-using Parquet;
 using Parquet.PerfRunner.Benchmarks;
 
 if(args.Length == 1) {

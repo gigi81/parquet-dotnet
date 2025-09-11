@@ -1128,7 +1128,6 @@ namespace System {
 // FILE: src/NetBox/System/ByteArrayExtensions.cs
 
 namespace System {
-    using System.Security.Cryptography;
     using Crypto = System.Security.Cryptography;
 
     /// <summary>
@@ -1677,7 +1676,6 @@ namespace System {
     using System.Collections;
     using System.Diagnostics;
     using global::System.Collections.Generic;
-    using global::System.Linq;
 
     /// <summary>
     /// <see cref="System.IEquatable{T}"/> extension methods
