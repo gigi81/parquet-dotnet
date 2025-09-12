@@ -64,8 +64,10 @@ class DataColumnReader {
         int definedValuesCount = totalValuesInChunk;
         if(_stats?.NullCount != null)
             definedValuesCount -= (int)_stats.NullCount.Value;
-        using var pc = new PackedColumn(_dataField, totalValuesInChunk, definedValuesCount);
         long fileOffset = GetFileOffset();
+        
+        using var pc = new PackedColumn(_dataField, totalValuesInChunk, definedValuesCount);
+        
         _inputStream.Seek(fileOffset, SeekOrigin.Begin);
 
         while(pc.ValuesRead < totalValuesInChunk) {
@@ -210,17 +212,27 @@ class DataColumnReader {
 
         if(_dataField.MaxRepetitionLevel > 0) {
             //todo: use rented buffers, but be aware that rented length can be more than requested so underlying logic relying on array length must be fixed too.
-            int levelsRead = ReadLevels(bytes.AsSpan(),
-                _dataField.MaxRepetitionLevel, pc.GetWriteableRepetitionLevelSpan(),
-                ph.DataPageHeaderV2.NumValues, ph.DataPageHeaderV2.RepetitionLevelsByteLength, out int usedLength);
+            int levelsRead = ReadLevels(
+                bytes.AsSpan(),
+                _dataField.MaxRepetitionLevel, 
+                pc.GetWriteableRepetitionLevelSpan(),
+                ph.DataPageHeaderV2.NumValues,
+                ph.DataPageHeaderV2.RepetitionLevelsByteLength,
+                out int usedLength);
+            
             dataUsed += usedLength;
             pc.MarkRepetitionLevels(levelsRead);
         }
 
         if(_dataField.MaxDefinitionLevel > 0) {
-            int levelsRead = ReadLevels(bytes.AsSpan().Slice(dataUsed),
-                _dataField.MaxDefinitionLevel, pc.GetWriteableDefinitionLevelSpan(),
-                ph.DataPageHeaderV2.NumValues, ph.DataPageHeaderV2.DefinitionLevelsByteLength, out int usedLength);
+            int levelsRead = ReadLevels(
+                bytes.AsSpan().Slice(dataUsed),
+                _dataField.MaxDefinitionLevel,
+                pc.GetWriteableDefinitionLevelSpan(),
+                ph.DataPageHeaderV2.NumValues,
+                ph.DataPageHeaderV2.DefinitionLevelsByteLength,
+                out int usedLength);
+            
             dataUsed += usedLength;
             pc.MarkDefinitionLevels(levelsRead);
         }
