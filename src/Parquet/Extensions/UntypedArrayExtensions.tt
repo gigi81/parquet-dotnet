@@ -248,6 +248,40 @@ namespace Parquet.Extensions {
        foreach (string nt in types)
        {
 #>
+#if NET6_0_OR_GREATER
+    private static void ExplodeTypeFast(
+        <#= nn(nt) #>[] dictionary,
+        Span<int> indexes,
+        <#= nn(nt) #>[] result,
+        int resultOffset,
+        int resultCount) {
+
+        int length = 0;
+        int indexPrevious = -1;
+        
+        for(int i = 0; i < resultCount; i++) {
+            if(length == 0 || indexes[i] == indexPrevious) {
+                length++;
+                indexPrevious = indexes[i];
+                continue;
+            }
+
+            // The following is way faster than using Array.Get/SetValue as it avoids boxing (x60 slower)
+            // Array.Copy is still x5 slower than native typed operation as it emits "callvirt" IL instruction
+            // Array.Fill of contiguous blocks is ~ 30% faster
+            if(indexPrevious < dictionary.Length) {
+                Array.Fill(result, dictionary[indexPrevious],resultOffset + i - length, length);
+            }
+            
+            length = 1;
+            indexPrevious = indexes[i];
+        }
+        
+        if(length > 0 && indexPrevious < dictionary.Length) {
+            Array.Fill(result, dictionary[indexPrevious], resultOffset + resultCount - length, length);
+        }
+    }
+#else
     private static void ExplodeTypeFast(<#= nn(nt) #>[] dictionary,
         Span<int> indexes,
         <#= nn(nt) #>[] result, int resultOffset, int resultCount) {
@@ -261,7 +295,7 @@ namespace Parquet.Extensions {
             }
         }
     }
-
+#endif
 <#
        }
    }
