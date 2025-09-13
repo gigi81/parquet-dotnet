@@ -18,23 +18,23 @@ public class ParquetOptions {
     public bool TreatBigIntegersAsDates { get; set; } = true;
 
 #if NET6_0_OR_GREATER
-        /// <summary>
-        /// When set to true, parquet dates will be deserialized as <see cref="DateOnly"/>, otherwise
-        /// as <see cref="DateTime"/> with missing time part.
-        /// </summary>
-        public bool UseDateOnlyTypeForDates { get; set; } = false;
+    /// <summary>
+    /// When set to true, parquet dates will be deserialized as <see cref="DateOnly"/>, otherwise
+    /// as <see cref="DateTime"/> with missing time part.
+    /// </summary>
+    public bool UseDateOnlyTypeForDates { get; set; } = false;
 
-        /// <summary>
-        /// When set to true, parquet times with millisecond precision will be deserialized as <see cref="TimeOnly"/>, otherwise
-        /// as <see cref="TimeSpan"/> with missing time part.
-        /// </summary>
-        public bool UseTimeOnlyTypeForTimeMillis { get; set; } = false;
+    /// <summary>
+    /// When set to true, parquet times with millisecond precision will be deserialized as <see cref="TimeOnly"/>, otherwise
+    /// as <see cref="TimeSpan"/> with missing time part.
+    /// </summary>
+    public bool UseTimeOnlyTypeForTimeMillis { get; set; } = false;
 
-        /// <summary>
-        /// When set to true, parquet times with microsecond precision will be deserialized as <see cref="TimeOnly"/>, otherwise
-        /// as <see cref="TimeSpan"/> with missing time part.
-        /// </summary>
-        public bool UseTimeOnlyTypeForTimeMicros { get; set; } = false;
+    /// <summary>
+    /// When set to true, parquet times with microsecond precision will be deserialized as <see cref="TimeOnly"/>, otherwise
+    /// as <see cref="TimeSpan"/> with missing time part.
+    /// </summary>
+    public bool UseTimeOnlyTypeForTimeMicros { get; set; } = false;
 #endif
 
     /// <summary>

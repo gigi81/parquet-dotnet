@@ -96,8 +96,8 @@ static class ParquetDictionaryEncoder {
 #if NETSTANDARD2_0
         var hs = new HashSet<string>(StringComparer.Ordinal);
 #else
-            // pre-allocation is a tiny performance boost
-            var hs = new HashSet<string>(strings.Length, StringComparer.Ordinal);
+        // pre-allocation is a tiny performance boost
+        var hs = new HashSet<string>(strings.Length, StringComparer.Ordinal);
 #endif
 
         for(int i = offset; i < offset + count; i++)

@@ -28,7 +28,7 @@ static class ParquetPlainEncoder {
         Stream destination,
         DataColumnStatistics? stats = null) {
         System.Type t = data.GetType();
-
+        
         if(t == typeof(bool[])) {
             Span<bool> span = ((bool[])data).AsSpan(offset, count);
             Encode(span, destination);
