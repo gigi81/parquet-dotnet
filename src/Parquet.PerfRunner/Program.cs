@@ -29,8 +29,7 @@ namespace Parquet.PerfRunner
                         .WithOptions(ConfigOptions.Default | ConfigOptions.StopOnFirstError)
                         .AddJob(Job.Dry.WithToolchain(new InProcessEmitToolchain(TimeSpan.FromHours(1.0), true)));
                 }
-                else
-                {
+                else {
                     config = DefaultConfig
                         .Instance
                         //.AddColumn(new SizeInBytesColumn())
@@ -39,14 +38,9 @@ namespace Parquet.PerfRunner
 
                 var benchmarks = new[]
                 {
-                    typeof(DecimalRead),
-                    typeof(IntRead)
-                    //BenchmarkConverter.TypeToBenchmarks(typeof(DecimalWrite), config),
-                    //BenchmarkConverter.TypeToBenchmarks(typeof(FloatTimeSeriesRead), config),
-                    //BenchmarkConverter.TypeToBenchmarks(typeof(FloatTimeSeriesWrite), config),
-                    //BenchmarkConverter.TypeToBenchmarks(typeof(FloatArrayTimeSeriesRead), config),
-                    //BenchmarkConverter.TypeToBenchmarks(typeof(NestedRead), config),
-                    //BenchmarkConverter.TypeToBenchmarks(typeof(NestedWrite), config),
+                    typeof(ReadGroupInt),
+                    typeof(ReadGroupLong),
+                    typeof(ReadGroupDecimal)
                 };
                 
                 var summaries = BenchmarkSwitcher

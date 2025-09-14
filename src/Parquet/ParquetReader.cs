@@ -56,7 +56,7 @@ public class ParquetReader : ParquetActor, IDisposable {
     public static async Task<ParquetReader> CreateAsync(string filePath,
         ParquetOptions? parquetOptions = null,
         CancellationToken cancellationToken = default) {
-        Stream fs = System.IO.File.OpenRead(filePath);
+        var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
         var reader = new ParquetReader(fs, parquetOptions, false);
         await reader.InitialiseAsync(cancellationToken);
         return reader;

@@ -438,7 +438,7 @@ static class SchemaEncoder {
 
                 precision = dfDecimal.Precision;
                 scale = dfDecimal.Scale;
-                tse.TypeLength = BigDecimal.GetBufferSize(dfDecimal.Precision);
+                tse.TypeLength = BigDecimalEncoder.GetBufferSize(dfDecimal.Precision);
             } else {
                 //set defaults
                 tse.Type = Type.FIXED_LEN_BYTE_ARRAY;

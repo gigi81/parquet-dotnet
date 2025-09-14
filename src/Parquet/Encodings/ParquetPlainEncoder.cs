@@ -346,7 +346,8 @@ static class ParquetPlainEncoder {
                 decimal ldv = lv * lscaleFactor;
                 return ldv;
             case TType.FIXED_LEN_BYTE_ARRAY:
-                return new BigDecimal(value, tse);
+                var decoder = new BigDecimalDecoder(tse);
+                return decoder.Decode(value);
             default:
                 throw new InvalidDataException($"data type '{tse.Type}' does not represent a decimal");
         }
@@ -409,8 +410,8 @@ static class ParquetPlainEncoder {
                     result = BitConverter.GetBytes(l);
                     return true;
                 case TType.FIXED_LEN_BYTE_ARRAY:
-                    var bd = new BigDecimal(value, tse.Precision!.Value, tse.Scale!.Value);
-                    result = bd.GetBytes();
+                    var bd = new BigDecimalEncoder(tse.Precision!.Value, tse.Scale!.Value);
+                    result = bd.GetBytes(value);
                     return true;
                 default:
                     throw new InvalidDataException($"data type '{tse.Type}' does not represent a decimal");
@@ -646,9 +647,9 @@ static class ParquetPlainEncoder {
                     }
                 break;
             case TType.FIXED_LEN_BYTE_ARRAY:
+                var bd = new BigDecimalEncoder(tse.Precision ?? 0, tse.Scale ?? 0);
                 foreach(decimal d in data) {
-                    var bd = new BigDecimal(d, tse.Precision ?? 0, tse.Scale ?? 0);
-                    byte[] b = bd.GetBytes();
+                    byte[] b = bd.GetBytes(d);
                     tse.TypeLength = b.Length; //always re-set type length as it can differ from default type length
                     destination.Write(b, 0, b.Length);
                 }
@@ -661,66 +662,80 @@ static class ParquetPlainEncoder {
     public static int Decode(Span<byte> source, Span<decimal> data, SchemaElement tse) {
         switch(tse.Type) {
             case TType.INT32: {
-                decimal scaleFactor = (decimal)Math.Pow(10, -tse.Scale ?? 0);
-                int[] ints = ArrayPool<int>.Shared.Rent(data.Length);
-                try {
-                    Decode(source, ints.AsSpan(0, data.Length));
-                    for(int i = 0; i < data.Length; i++)
-                        data[i] = ints[i] * scaleFactor;
-                    return data.Length;
-                } finally {
-                    ArrayPool<int>.Shared.Return(ints);
-                }
+                return DecodeIntToDecimal(source, data, tse);
             }
             case TType.INT64: {
-                decimal scaleFactor = (decimal)Math.Pow(10, -tse.Scale ?? 0);
-                long[] longs = ArrayPool<long>.Shared.Rent(data.Length);
-                try {
-                    Decode(source, longs.AsSpan(0, data.Length));
-                    for(int i = 0; i < data.Length; i++)
-                        data[i] = longs[i] * scaleFactor;
-                    return data.Length;
-                } finally {
-                    ArrayPool<long>.Shared.Return(longs);
-                }
+                return DecodeLongToDecimal(source, data, tse);
             }
             case TType.FIXED_LEN_BYTE_ARRAY: {
-                int tl = tse.TypeLength ?? 0;
-                if(tl == 0)
-                    return 0;
-
-                byte[] chunk = new byte[tl];
-                int i = 0;
-                for(int offset = 0; offset + tl <= source.Length && i < data.Length; offset += tl, i++) {
-                    decimal dc = new BigDecimal(source.Slice(offset, tl).ToArray(), tse);
-                    data[i] = dc;
-                }
-                return i;
+                return DecodeFixedLengthArrayToDecimal(source, data, tse);
             }
             case TType.BYTE_ARRAY: {
-                // type_length: 0
-                // precision: 4
-                // scale: 2
-                // see https://github.com/apache/arrow/pull/2646/files
-
-                int read = 0;
-                // convert each byte chunk to valid decimal bytes
-                int spos = 0;
-                while(read < data.Length) {
-                    int length = source.ReadInt32(spos);
-                    spos += sizeof(int);
-                    if(length > 0) {
-                        decimal dc = new BigDecimal(source.Slice(spos, length).ToArray(), tse);
-                        spos += length;
-                        data[read++] = dc;
-                    }
-                }
-                return read;
+                return DecodeByteArrayToDecimal(source, data, tse);
             }
 
             default:
                 throw new InvalidDataException($"data type '{tse.Type}' does not represent a decimal");
         }
+    }
+
+    public static int DecodeByteArrayToDecimal(Span<byte> source, Span<decimal> data, SchemaElement tse)
+    {
+        // type_length: 0
+        // precision: 4
+        // scale: 2
+        // see https://github.com/apache/arrow/pull/2646/files
+
+        int read = 0;
+        // convert each byte chunk to valid decimal bytes
+        int spos = 0;
+        var decoder = new BigDecimalDecoder(tse);
+        while(read < data.Length) {
+            int length = source.ReadInt32(spos);
+            spos += sizeof(int);
+            if(length > 0) {
+                decimal dc = decoder.Decode(source.Slice(spos, length));
+                spos += length;
+                data[read++] = dc;
+            }
+        }
+        return read;
+    }
+
+    public static int DecodeFixedLengthArrayToDecimal(Span<byte> source, Span<decimal> data, SchemaElement tse)
+    {
+        int tl = tse.TypeLength ?? 0;
+        if(tl == 0)
+            return 0;
+
+        var decoder = new BigDecimalDecoder(tse);
+        int i = 0;
+        for(int offset = 0; offset + tl <= source.Length && i < data.Length; offset += tl, i++) {
+            data[i] = decoder.Decode(source.Slice(offset, tl));
+        }
+        return i;
+    }
+
+    public static int DecodeLongToDecimal(Span<byte> source, Span<decimal> data, SchemaElement tse)
+    {
+        decimal scaleFactor = (decimal)Math.Pow(10, -tse.Scale ?? 0);
+        long[] longs = ArrayPool<long>.Shared.Rent(data.Length);
+        try {
+            Decode(source, longs.AsSpan(0, data.Length));
+            for(int i = 0; i < data.Length; i++)
+                data[i] = longs[i] * scaleFactor;
+            return data.Length;
+        } finally {
+            ArrayPool<long>.Shared.Return(longs);
+        }
+    }
+
+    public static int DecodeIntToDecimal(Span<byte> source, Span<decimal> data, SchemaElement tse)
+    {
+        decimal scaleFactor = (decimal)Math.Pow(10, -tse.Scale ?? 0);
+        for(int i = 0, s = 0; i < data.Length; i++, s+= 4)
+            data[i] = ((source[s] << 24) + (source[s + 1] << 16) + (source[s + 2] << 8) + source[s + 3])  * scaleFactor;
+        return data.Length;
     }
 
     public static void Encode(ReadOnlySpan<double> data, Stream destination) {
