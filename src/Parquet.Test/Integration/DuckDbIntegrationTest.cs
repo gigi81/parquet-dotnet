@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DuckDB.NET.Data;
 using Parquet.Data;
 using Parquet.File.Values.Primitives;
 using Parquet.Schema;
 using Xunit;
+using Parquet.Test.Xunit;
 
 namespace Parquet.Test.Integration {
 
@@ -90,8 +89,9 @@ namespace Parquet.Test.Integration {
             return value;
         }
 
-        [Theory, TypeTestData(DuckDb = true)]
+        [SkipOnWindowsX86Theory, TypeTestData(DuckDb = true)]
         public async Task DuckDbGeneratedFileReads(TTI input) {
+
             string tmp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".parquet");
 
             try {
@@ -160,3 +160,5 @@ namespace Parquet.Test.Integration {
 
     }
 }
+
+
