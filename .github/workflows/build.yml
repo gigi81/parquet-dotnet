@@ -40,8 +40,32 @@ jobs:
             name: MacOS ARM64
       fail-fast: false
     steps:
+    
+    # Workaround for win-x86 see: https://github.com/actions/setup-dotnet/issues/72#issuecomment-2722269405
+    # This must be done before the normal setup-dotnet action to ensure DOTNET_ROOT refers to the 64-bit installation
+    - name: Setup .NET x86
+      if: matrix.runtime == 'win-x86'
+      uses: actions/setup-dotnet@v4
+      env:
+        PROCESSOR_ARCHITECTURE: x86
+        DOTNET_INSTALL_DIR: C:\Program Files (x86)\dotnet
+      with:
+        dotnet-version: |
+          6.0.x
+          8.0.x
+          9.0.x
+          10.0.x
+  
+    # Copy DOTNET_ROOT from the above step to DOTNET_ROOT(x86), the next step will overwrite DOTNET_ROOT to refer to the 64-bit installation
+    - name: Set DOTNET_ROOT(x86)
+      if: matrix.runtime == 'win-x86'
+      shell: pwsh
+      run: |
+        echo "DOTNET_ROOT(x86)=${env:DOTNET_ROOT}" | Out-File -FilePath $env:GITHUB_ENV -Append
+
     - uses: actions/checkout@v4
     - name: Setup .NET
+      if: matrix.runtime != 'win-x86'
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
@@ -49,11 +73,12 @@ jobs:
           8.0.x
           9.0.x
           10.0.x
-        architecture: ${{ matrix.runtime == 'win-x86' && 'x86' || '<auto>' }}
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10' 
+        python-version: '3.10'
+  
     - name: Install Python dependencies
       run: pip install pyarrow pandas
 
